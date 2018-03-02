@@ -1,4 +1,4 @@
-var canvas, ctx, minSize, indexPropMult;
+var canvas, ctx, minSize, indexPropMult, frameCount;
 
 const props = ["angle", "length", "sides", "weight", "hue"];
 // what each prop is based on
@@ -18,6 +18,7 @@ window.onload = function() {
 }
 
 function setup() {
+  frameCount = 0;
   indexPropMult = Math.random()*5;
   for (i in props) {
     console.log(props[i]);
@@ -29,11 +30,11 @@ function setup() {
         break;
       case 1:
         // other prop of self
-        base[props[i]] = "P" + props[Math.floor(Math.random()*props.length)];
+        base[props[i]] = [Math.random()*10, props[Math.floor(Math.random()*props.length)]];
         vals[props[i]] = [];
         break;
       case 2:
-        base[props[i]] = "S";
+        base[props[i]] = ["S", Math.random()*50, Math.random()*50];
         vals[props[i]] = [];
         // sin waveprops
         break;
@@ -42,16 +43,31 @@ function setup() {
         vals[props[i]] = [];
         // linear increase, maybe alternate increase/decrease
     }
-    for (i = 0; i < Math.random() * minSize ** 2 / 10000; i++) {
-
+  }
+  for (i = 0; i < Math.random() * minSize ** 2 / 10000; i++) {
+    for (j in base) {
+      vals[j].push(getValFromBase(j,vals[j].length));
     }
   }
 }
 
+function getValFromBase(prop,index) {
+  if (prop in consts) {
+    return consts[prop];
+  } if (typeof base[prop] === "number") {
+    // return old val plus base[prop]
+  } if (base[prop][1] === "S") {
+    // return sin of framecount times multiplier plus constant
+  }
+  return getValFromBase(base[prop][1],index) + base[prop][0];
+}
+
 function run() {
   for (i in base) {
-    if (typeof base[props[i]] == "number") {
+    if (base[i] === "S") {
+      for (j in vals[i]) {
 
+      }
     }
   }
   for (i in vals) {
@@ -59,4 +75,5 @@ function run() {
 
     }
   }
+  frameCount++;
 }
